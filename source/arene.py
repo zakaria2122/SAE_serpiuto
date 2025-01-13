@@ -858,4 +858,14 @@ def copy_arene(arene:dict)->dict:
     Returns:
         dict: la copie de l'arène passée en paramètre
     """
-    ...
+    nb_ligne = arene['matrice']['nb_lig']
+    nb_colonne = arene['matrice']['nb_col']
+
+    lst_nom = []
+    coul = 0
+    for serp in arene['serpent']:    
+        lst_nom.append(serpent.Serpent(serp['nom_j'], coul))
+
+
+    mat= matrice.Matrice(nb_ligne, nb_colonne)
+    return {"matrice":mat,"nb_joueurs":len(lst_nom),"serpents": lst_nom}    
