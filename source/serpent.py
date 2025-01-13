@@ -69,7 +69,7 @@ def get_liste_pos(serpent:dict)->list:
     Returns:
         list: la liste des positions occupées par le serpent
     """    
-    ...
+    return serpent['direction']
 
 def get_queue(serpent:dict)->[int,int]:
     """retourne la position (lig,col) de la queue du serpent dans l'arène
