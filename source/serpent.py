@@ -286,4 +286,10 @@ def serpent_from_str(la_chaine, sep=";")->dict:
         Returns:
             dict: la copie du serpent passé en paramètres
         """ 
-        ...       
+        copie = {}
+        for cle, val in serpent.items():
+            if type(val) is list :
+                copie[cle] = val[:]  
+            else:
+                copie[cle] = val   
+        return copie                
