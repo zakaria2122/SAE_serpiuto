@@ -80,7 +80,7 @@ def get_queue(serpent:dict)->[int,int]:
     Returns:
         [int,int]: la position lig,col du la queue du serpent
     """    
-    ...
+    return serpent['positions'][0]
 
 def get_derniere_direction(serpent:dict)->str:
     """retourne la dernière direction choisie par le joueur pour se déplacer
