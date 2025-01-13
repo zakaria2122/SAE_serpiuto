@@ -135,7 +135,7 @@ def set_liste_pos(serpent:dict, tete:list):
         serpent (dict): le serpent considéré
         tete (list): la liste des positions occupées par ce serpent
     """    
-    ...
+    serpent['positions'] = (tete)
 
 def set_derniere_direction(serpent:dict, direction:str):
     """Met à jout la dernière direction utilisée par le serpent (utile pour l'affichage)
