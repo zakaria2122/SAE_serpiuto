@@ -260,7 +260,10 @@ def serpent_2_str(serpent:dict, sep=";")->str:
     Returns:
         str: la chaine de caractères contenant les toutes informations du serpent
     """    
-    info_serpent = serpent['nom_j']+ sep +str(serpent['num_j'])+ sep +str(serpent['points'])+ sep + str(serpent['positions'])+str(serpent['tps_surpuissance'])+ sep +str(serpent['tps_mange_mur'])+ sep +str(serpent['tps_protection'])+sep+str(serpent['direction']) 
+    positions = ""
+    for ligne, colonne in serpent['positions']:
+        positions = positions +str(ligne) + ";" +str(colonne) + ";"
+    info_serpent = serpent['nom_j']+ sep +str(serpent['num_j'])+ sep +str(serpent['points'])+ sep + str(serpent['tps_surpuissance'])+ sep +str(serpent['tps_mange_mur'])+ sep +str(serpent['tps_protection'])+sep+str(serpent['direction'] + "\n" + positions) 
     return info_serpent
 
 def serpent_from_str(la_chaine, sep=";")->dict:
