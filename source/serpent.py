@@ -158,7 +158,7 @@ def to_str(serpent:dict)->str:
     Returns:
         str: la chaine de caractères donnant les informations principales d'un serpent 
     """    
-    ...
+    return serpent['nom_j'] + ' ' + str(serpent['num_j']) + ' -> ' + str(serpent['points']) + ' s:' + str(serpent['tps_surpuissance']) + ' m:' + str(serpent['tps_mange_mur']) + ' p:' + str(serpent['tps_protection'])
 
 def get_temps_protection(serpent:dict)->int:
     """indique le temps restant pour le bonus protection
