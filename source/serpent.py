@@ -157,7 +157,7 @@ def get_temps_protection(serpent:dict)->int:
     Returns:
         int: le nombre de tours restant pour ce bonus
     """    
-    ...
+    return serpent['tps_protection']
 
 def get_temps_mange_mur(serpent:dict)->int:
     """indique le temps restant pour le bonus mange mur
@@ -167,8 +167,8 @@ def get_temps_mange_mur(serpent:dict)->int:
 
     Returns:
         int: le nombre de tours restant pour ce bonus
-    """   
-    ...
+    """
+    return serpent['tps_mange_mur']
 
 def get_temps_surpuissance(serpent:dict)->int:
     """indique le temps restant pour le bonus surpuissance
@@ -179,7 +179,7 @@ def get_temps_surpuissance(serpent:dict)->int:
     Returns:
         int: le nombre de tours restant pour ce bonus
     """   
-    ...
+    return serpent['tps_surpuissance']
 
 def ajouter_temps_protection(serpent:dict, temps:int)->int:
     """ajoute du temps supplémentaire pour le bonus protection
@@ -191,7 +191,8 @@ def ajouter_temps_protection(serpent:dict, temps:int)->int:
     Returns:
         int: le nombre de tours total restant pour ce bonus
     """    
-    ...
+    serpent['tps_protection'] += temps
+    return serpent['tps_protection']
 
 def ajouter_temps_mange_mur(serpent:dict, temps:int)->int:
     """ajoute du temps supplémentaire pour le bonus mange mur
@@ -203,7 +204,8 @@ def ajouter_temps_mange_mur(serpent:dict, temps:int)->int:
     Returns:
         int: le nombre de tours total restant pour ce bonus
     """    
-    ...
+    serpent['tps_mange_mur'] += temps
+    return serpent['tps_mange_mur']
 
 def ajouter_temps_surpuissance(serpent:dict, temps:int)->int:
     """ajoute du temps supplémentaire pour le bonus surpuissance
@@ -215,7 +217,8 @@ def ajouter_temps_surpuissance(serpent:dict, temps:int)->int:
     Returns:
         int: le nombre de tours total restant pour ce bonus
     """    
-    ...
+    serpent['tps_surpuissance'] += temps
+    return serpent['tps_surpuissance']
 
 def maj_temps(serpent:dict):
     """Décrémente les temps restant pour les bonus de ce serpent
