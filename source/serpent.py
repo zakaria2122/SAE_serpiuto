@@ -274,12 +274,26 @@ def serpent_from_str(la_chaine, sep=";")->dict:
     Returns:
         dict: Le serpent représenté dans la chaine de caractères
     """    
-    serpent = la_chaine.split(sep)
-    res = Serpent("", "", 0, [], 0, 0, 0, "")
-    indice = 0
-    for cle in res.keys():
-        res[cle] = serpent[indice]
-        indice += 1
+    lst_cle = [('nom_j', str), ('num_j', int), ('points', int), ('tps_surpuissance', int), ('tps_mange_mur', int), ('tps_protection', int)]
+    res = Serpent('est', 1)
+
+    serpent = la_chaine.split('\n')
+    s1, s2 = serpent 
+    lst_s1 = s1.split(';')
+    lst_s2 = s2.split(';')
+    i = 0
+
+    for cle,typ in lst_cle:
+        res[cle] = typ(lst_s1[i])
+        i += 1
+
+   
+    lst_position = []
+    for posi in range(0, len(lst_s2) - 1, 2):
+    
+        lst_position.append((int(lst_s2[posi]), int(lst_s2[posi + 1])))  
+
+    res['positions'] = lst_position      
     return res
 
     def copy_serpent(serpent:dict)->dict:
