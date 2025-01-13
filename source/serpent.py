@@ -282,8 +282,8 @@ def serpent_from_str(la_chaine, sep=";")->dict:
 
     serpent = la_chaine.split('\n')
     s1, s2 = serpent 
-    lst_s1 = s1.split(';')
-    lst_s2 = s2.split(';')
+    lst_s1 = s1.split(sep)
+    lst_s2 = s2.split(sep)
     i = 0
 
     for cle,typ in lst_cle:
