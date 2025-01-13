@@ -141,7 +141,8 @@ def set_derniere_direction(serpent:dict, direction:str):
         serpent (dict): le serpent considéré
         direction (str): un des caractère N S E O
     """    
-    serpent['direction'] = direction
+    if direction in {'N', 'S', 'E', 'O'}:
+        serpent['direction'] = direction
 
 def to_str(serpent:dict)->str:
     """produit une chaine de caractères contenant les informations principales d'un serpent sour la forme
