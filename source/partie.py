@@ -219,4 +219,10 @@ def copy_partie(partie:dict)->dict:
     Returns:
         dict: la recopie de la partie passée en paramètres
     """
-    ...
+    copie = {}
+    for cle, val in partie.items():
+        if cle == "arene":
+            copie[cle] = arene.copy_arene(val) 
+        else:
+            copie[cle] = val   
+    return copie  
