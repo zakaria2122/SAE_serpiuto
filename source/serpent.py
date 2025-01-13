@@ -91,7 +91,7 @@ def get_derniere_direction(serpent:dict)->str:
     Returns:
         str: un des caractère N S E O
     """    
-    ...
+    return serpent['direction']
 
 def get_bonus(serpent:dict)->list:
     """retourne une liste contenant les bonus obtenus par le joueur
