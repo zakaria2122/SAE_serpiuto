@@ -112,6 +112,7 @@ def get_bonus(serpent:dict)->list:
 
     if serpent['tps_protection'] > 0 :
         lst_final.append('protection')
+    return lst_final            
 
 
 
