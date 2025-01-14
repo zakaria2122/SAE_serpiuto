@@ -24,6 +24,8 @@ def Serpent(nom_joueur:str, num_joueur:int,points:int=0,positions:list=None,tps_
     Returns:
         dict: une dictionnaire contenant les informations du serpent
     """   
+    if direction not in {'N', 'S', 'E', 'O'}:
+        raise ValueError("Invalid direction. Must be one of 'N', 'S', 'E', 'O'.")
     dico_info = {'nom_j': nom_joueur, 'num_j': num_joueur,'points':points, 'positions':positions, 'tps_surpuissance':tps_s, 'tps_protection':tps_p, 'tps_mange_mur':tps_m, 'direction':direction}
     return dico_info
 
@@ -71,7 +73,7 @@ def get_liste_pos(serpent:dict)->list:
     """    
     return serpent['positions']
 
-def get_queue(serpent:dict) -> [int,int]:
+def get_queue(serpent:dict) -> list:
     """retourne la position (lig,col) de la queue du serpent dans l'arène
 
     Args:
@@ -106,13 +108,13 @@ def get_bonus(serpent:dict)->list:
     """    
     lst_final = []
     if serpent['tps_surpuissance'] > 0 :
-        lst_final.append('surpuissance')
+        lst_final.append(-3)
 
     if serpent['tps_mange_mur'] > 0 :
-        lst_final.append('mange_mur')
+        lst_final.append(-4)
 
     if serpent['tps_protection'] > 0 :
-        lst_final.append('protection')
+        lst_final.append(-5)
     return lst_final            
 
 
@@ -259,13 +261,10 @@ def serpent_2_str(serpent:dict, sep=";")->str:
     Returns:
         str: la chaine de caractères contenant les toutes informations du serpent
     """   
-
     positions = ""
-    print(serpent['positions'][0])
     for pos in serpent['positions']:
-        
-        positions = positions +str(pos[0]) + sep +str(pos[1]) + sep
-    info_serpent = serpent['nom_j']+ sep +str(serpent['num_j'])+ sep +str(serpent['points'])+ sep + str(serpent['tps_surpuissance'])+ sep +str(serpent['tps_mange_mur'])+ sep +str(serpent['tps_protection'])+ "\n" + positions 
+        positions = positions + str(pos[0]) + sep + str(pos[1]) + sep
+    info_serpent = serpent['nom_j'] + sep + str(serpent['num_j']) + sep + str(serpent['points']) + sep + str(serpent['tps_surpuissance']) + sep + str(serpent['tps_mange_mur']) + sep + str(serpent['tps_protection']) + sep + str(serpent['direction']) + "\n" + positions 
     return info_serpent[:-1] + '\n'
 
 
@@ -282,8 +281,7 @@ def serpent_from_str(la_chaine, sep=";")->dict:
         dict: Le serpent représenté dans la chaine de caractères
     """    
     lst_cle = [('nom_j', str), ('num_j', int), ('points', int), ('tps_surpuissance', int), ('tps_mange_mur', int), ('tps_protection', int)]
-    res = Serpent('est', 1)
-
+    res = Serpent('est', 1, 0, [], 0, 0, 0, 'N')
     serpent = la_chaine.split('\n')
     s1, s2 = serpent 
     lst_s1 = s1.split(sep)
@@ -293,7 +291,7 @@ def serpent_from_str(la_chaine, sep=";")->dict:
     for cle,typ in lst_cle:
         res[cle] = typ(lst_s1[i])
         i += 1
-
+    res['direction'] = lst_s1[i]
    
     lst_position = []
     for posi in range(0, len(lst_s2) -1 , 2):
@@ -301,14 +299,6 @@ def serpent_from_str(la_chaine, sep=";")->dict:
         lst_position.append([int(lst_s2[posi]), int(lst_s2[posi + 1])])  
     res['positions'] = lst_position      
     return res
-
-
-
-
-
-
-
-
 
 
 
