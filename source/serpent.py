@@ -80,6 +80,7 @@ def get_queue(serpent:dict)->[int,int]:
     Returns:
         [int,int]: la position lig,col du la queue du serpent
     """    
+
     return serpent['positions'][0]
 
 def get_derniere_direction(serpent:dict)->str:
@@ -257,12 +258,14 @@ def serpent_2_str(serpent:dict, sep=";")->str:
 
     Returns:
         str: la chaine de caractères contenant les toutes informations du serpent
-    """    
-    positions = ""
+    """   
+    positions = "" 
     for ligne, colonne in serpent['positions']:
         positions = positions +str(ligne) + sep +str(colonne) + sep
-    info_serpent = serpent['nom_j']+ sep +str(serpent['num_j'])+ sep +str(serpent['points'])+ sep + str(serpent['tps_surpuissance'])+ sep +str(serpent['tps_mange_mur'])+ sep +str(serpent['tps_protection'])+sep+str(serpent['direction'] + "\n" + positions) 
+    info_serpent = serpent['nom_j']+ sep +str(serpent['num_j'])+ sep +str(serpent['points'])+ sep + str(serpent['tps_surpuissance'])+ sep +str(serpent['tps_mange_mur'])+ sep +str(serpent['tps_protection'])+ "\n" + positions 
     return info_serpent
+
+
 
 def serpent_from_str(la_chaine, sep=";")->dict:
     """Reconstruit un serpent à partir d'une chaine de caractères
@@ -297,21 +300,21 @@ def serpent_from_str(la_chaine, sep=";")->dict:
     res['positions'] = lst_position      
     return res
 
-    def copy_serpent(serpent:dict)->dict:
-        """fait une copie du serpent passer en paramètres
-        Attention à bien faire une copie de la liste des positions
-        
+def copy_serpent(serpent:dict)->dict:
+    """fait une copie du serpent passer en paramètres
+    Attention à bien faire une copie de la liste des positions
+    
 
-        Args:
-            serpent (dict): le serpent à recopier
+    Args:
+        serpent (dict): le serpent à recopier
 
-        Returns:
-            dict: la copie du serpent passé en paramètres
-        """ 
-        copie = {}
-        for cle, val in serpent.items():
-            if type(val) is list :
-                copie[cle] = val[:]  
-            else:
-                copie[cle] = val   
-        return copie                
+    Returns:
+        dict: la copie du serpent passé en paramètres
+    """ 
+    copie = {}
+    for cle, val in serpent.items():
+        if type(val) is list :
+            copie[cle] = val[:]  
+        else:
+            copie[cle] = val   
+    return copie                
