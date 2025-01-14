@@ -71,7 +71,7 @@ def get_liste_pos(serpent:dict)->list:
     """    
     return serpent['positions']
 
-def get_queue(serpent:dict)->[int,int]:
+def get_queue(serpent:dict) -> [int,int]:
     """retourne la position (lig,col) de la queue du serpent dans l'arène
 
     Args:
@@ -133,7 +133,7 @@ def set_liste_pos(serpent:dict, tete:list):
         serpent (dict): le serpent considéré
         tete (list): la liste des positions occupées par ce serpent
     """    
-    serpent['positions'] = [tete]
+    serpent['positions'] = tete
 
 def set_derniere_direction(serpent:dict, direction:str):
     """Met à jout la dernière direction utilisée par le serpent (utile pour l'affichage)
@@ -259,11 +259,14 @@ def serpent_2_str(serpent:dict, sep=";")->str:
     Returns:
         str: la chaine de caractères contenant les toutes informations du serpent
     """   
-    positions = "" 
-    for ligne, colonne in serpent['positions']:
-        positions = positions +str(ligne) + sep +str(colonne) + sep
+
+    positions = ""
+    print(serpent['positions'][0])
+    for pos in serpent['positions']:
+        
+        positions = positions +str(pos[0]) + sep +str(pos[1]) + sep
     info_serpent = serpent['nom_j']+ sep +str(serpent['num_j'])+ sep +str(serpent['points'])+ sep + str(serpent['tps_surpuissance'])+ sep +str(serpent['tps_mange_mur'])+ sep +str(serpent['tps_protection'])+ "\n" + positions 
-    return info_serpent
+    return info_serpent[:-1]
 
 
 
