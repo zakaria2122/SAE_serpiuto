@@ -266,7 +266,7 @@ def serpent_2_str(serpent:dict, sep=";")->str:
         
         positions = positions +str(pos[0]) + sep +str(pos[1]) + sep
     info_serpent = serpent['nom_j']+ sep +str(serpent['num_j'])+ sep +str(serpent['points'])+ sep + str(serpent['tps_surpuissance'])+ sep +str(serpent['tps_mange_mur'])+ sep +str(serpent['tps_protection'])+ "\n" + positions 
-    return info_serpent[:-1]
+    return info_serpent[:-1] + '\n'
 
 
 
@@ -296,12 +296,21 @@ def serpent_from_str(la_chaine, sep=";")->dict:
 
    
     lst_position = []
-    for posi in range(0, len(lst_s2) - 1, 2):
+    for posi in range(0, len(lst_s2) -1 , 2):
     
-        lst_position.append((int(lst_s2[posi]), int(lst_s2[posi + 1])))  
-
+        lst_position.append([int(lst_s2[posi]), int(lst_s2[posi + 1])])  
     res['positions'] = lst_position      
     return res
+
+
+
+
+
+
+
+
+
+
 
 def copy_serpent(serpent:dict)->dict:
     """fait une copie du serpent passer en paramètres
