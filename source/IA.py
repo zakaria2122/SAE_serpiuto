@@ -13,6 +13,7 @@ import client
 import random
 import arene
 import serpent
+import matrice
 direction_prec='X' # variable indiquant la décision précédente prise par le joueur. A mettre à jour soi-même
 
 ####################################################################
@@ -35,7 +36,7 @@ def directions_possibles(l_arene:dict,num_joueur:int)->str:
             pouvant être prise par le joueur. Attention il est possible
             qu'aucune direction ne soit possible donc la fonction peut retourner la chaine vide
     """    
-
+    return arene.directions_possibles(l_arene, num_joueur)
 
 def objets_voisinage(l_arene:dict, num_joueur, dist_max:int):
     """Retourne un dictionnaire indiquant pour chaque direction possibles, 
@@ -51,11 +52,161 @@ def objets_voisinage(l_arene:dict, num_joueur, dist_max:int):
             (distance,val_objet,prop) où distance indique le nombre de cases jusqu'à l'objet et id_objet
             val_obj indique la valeur de l'objet ou de la boite et prop indique le propriétaire de la boite
     """
-    ...
+   # dico_final = {}
+   # file = [get_tete(arene, num_joueur)]
+   # while file != 0:
+    #    case_act = file[0]
+   #     file.pop(0)
+
+    dico_final = {}
+
+    lig_t, col_t = get_tete(arene, num_joueur)
+    calque = matrice.Matrice(matrice.get_nb_lignes(l_arene['matrice']), matrice.get_nb_colonnes(l_arene["matrice"]), None)
+    matrice.set_val(calque, lig_t, col_t, 0)
+    modif = True 
+
+    while modif :
+        modif = False
+
+        for lig in range(matrice.get_nb_lignes(l_arene["matrice"])):
+            for col in range(matrice.get_nb_colonnes(l_arene["matrice"])):      
+                position_act = (lig, col)
+                mat_calque = calque['mat']
+                val_act = matrice.get_val(mat_calque, lig, col)
+
+                if val_act == None and not arene.est_mur(l_arene, position_act):
+                    for pos_voisin in voisins_possible(l_arene, position_act): 
+                        (lig_voisin, col_voisin) = pos_voisin
+                        valeur_voisin = matrice.get_val(calque, lig_voisin, col_voisin)
+
+                        if valeur_voisin != None :
+                            if valeur_voisin < dist_max:
+                                matrice.set_val(calque, lig, col, valeur_voisin + 1)
+                                modif = True
+                                if arene.est_bonus(l_arene, lig, col):
+                                    met_dans_dico(l_arene, lig, col, lig_t, col_t, dico_final, valeur_voisin + 1)
+                                   
+
+    return dico_final
+
+
+def met_dans_dico(aren, lig, col, lig_d, col_d, dico, distance):
+    if lig < lig_d :
+        dico['N'] += (distance, arene.get_val_boite(aren, lig, col), arene.get_proprietaire(aren, lig, col))
+    if lig > lig_d:
+        dico['S'] += (distance, arene.get_val_boite(aren, lig, col), arene.get_proprietaire(aren, lig, col))
+    if col < col_d :    
+        dico['O'] += (distance, arene.get_val_boite(aren, lig, col), arene.get_proprietaire(aren, lig, col))
+    if col > col_d :
+        dico['E'] += (distance, arene.get_val_boite(aren, lig, col), arene.get_proprietaire(aren, lig, col))    
+
+
+def get_tete(aren, num_j):
+    """renvoie la position de la tete
+
+    Args:
+        serpent(dict)): le serpent
+
+    Returns:
+        list: position
+    """
+    return arene.get_serpent(aren, num_j)[0]
+
+def voisins_possible(le_plateau, position):
+    """Renvoie l'ensemble des positions cases voisines accessibles de la position renseignées
+       Une case accessible est une case qui est sur le plateau et qui n'est pas un mur
+    Args:
+        le_plateau (plateau): un plateau de jeu
+        position (tuple): un tuple de deux entiers de la forme (no_ligne, no_colonne) 
+
+    Returns:
+        set: l'ensemble des positions des cases voisines accessibles
+    """
+    (lig_act, col_act) = position 
+
+    pos_n_l, pos_n_c = lig_act - 1, col_act
+    pos_s_l, pos_s_c = (lig_act + 1, col_act)
+    pos_e_l, pos_e_c = (lig_act, col_act + 1)
+    pos_o_l, pos_o_c = (lig_act, col_act - 1)
+
+    ens_final = set()
+
+    if est_sur_le_plateau(le_plateau, (pos_n_l, pos_n_c)) and not arene.est_mur(le_plateau, pos_n_l, pos_n_c):
+        ens_final.add((pos_n_l, pos_n_c))
+
+    if est_sur_le_plateau(le_plateau, (pos_s_l, pos_s_c)) and not arene.est_mur(le_plateau, pos_s_l, pos_s_c):
+        ens_final.add((pos_s_l, pos_s_c))   
+
+    if est_sur_le_plateau(le_plateau, (pos_e_l, pos_e_c)) and not arene.est_mur(le_plateau, pos_e_l, pos_e_c):
+        ens_final.add((pos_e_l, pos_e_c))    
+
+    if est_sur_le_plateau(le_plateau, (pos_o_l, pos_o_c)) and not arene.est_mur(le_plateau, pos_o_l, pos_o_c):
+        ens_final.add((pos_o_l, pos_o_c))    
+
+    return ens_final
+
+
+def est_sur_le_plateau(aren, pos):
+    """Indique si la position est bien sur le plateau
+
+    Args:
+        le_plateau (aren): l'arene
+        position (tuple): un tuple de deux entiers de la forme (no_ligne, no_colonne) 
+
+    Returns:
+        [bool]: True si la position est bien sur le plateau
+    """
+    taille_l, taille_c = pos
+    nb_lig_ar, nb_col_ar = arene.get_dim(aren)
+    return taille_l > -1 and taille_l < nb_lig_ar - 1 and taille_c > -1 and taille_c < nb_col_ar - 1
+
+
+
+#==========================================================================================
+
+def recherche_mini(dico_radar):
+    mini = None
+    card = ""
+    for cardi, lst_tuple in dico_radar.items():
+        for dist,val_o, _ in lst_tuple:
+            if mini is None or dist < mini :
+                mini = dist
+                card = cardi
+    return mini, card
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 def mon_IA2(num_joueur:int, la_partie:dict)->str:
+    #return recherche_mini(objets_voisinage(la_partie['arene'], num_joueur, 5))[1]
     return 'N'
 def mon_IA(num_joueur:int, la_partie:dict)->str:
     """Fonction qui va prendre la decision du prochain coup pour le joueur de numéro ma_couleur
@@ -91,6 +242,6 @@ if __name__=="__main__":
         ok,id_joueur,le_jeu,_=le_client.prochaine_commande()
         if ok:
             la_partie=partie.partie_from_str(le_jeu)
-            actions_joueur=mon_IA(int(id_joueur),la_partie)
+            actions_joueur=mon_IA2(int(id_joueur),la_partie)
             le_client.envoyer_commande_client(actions_joueur)
     le_client.afficher_msg("terminé")
