@@ -52,16 +52,11 @@ def objets_voisinage(l_arene:dict, num_joueur, dist_max:int):
             (distance,val_objet,prop) où distance indique le nombre de cases jusqu'à l'objet et id_objet
             val_obj indique la valeur de l'objet ou de la boite et prop indique le propriétaire de la boite
     """
-   # dico_final = {}
-   # file = [get_tete(arene, num_joueur)]
-   # while file != 0:
-    #    case_act = file[0]
-   #     file.pop(0)
 
-    dico_final = {}
+    dico_final = {'N': [], 'S': [], 'E': [], 'O': []}
 
-    lig_t, col_t = get_tete(arene, num_joueur)
-    calque = matrice.Matrice(matrice.get_nb_lignes(l_arene['matrice']), matrice.get_nb_colonnes(l_arene["matrice"]), None)
+    lig_t, col_t = get_tete(l_arene, num_joueur)
+    calque = matrice.Matrice(matrice.get_nb_lignes(l_arene['matrice']), matrice.get_nb_colonnes(l_arene["matrice"]))
     matrice.set_val(calque, lig_t, col_t, 0)
     modif = True 
 
@@ -71,10 +66,9 @@ def objets_voisinage(l_arene:dict, num_joueur, dist_max:int):
         for lig in range(matrice.get_nb_lignes(l_arene["matrice"])):
             for col in range(matrice.get_nb_colonnes(l_arene["matrice"])):      
                 position_act = (lig, col)
-                mat_calque = calque['mat']
-                val_act = matrice.get_val(mat_calque, lig, col)
+                val_act = matrice.get_val(calque, lig, col)
 
-                if val_act == None and not arene.est_mur(l_arene, position_act):
+                if val_act == None and not arene.est_mur(l_arene, lig, col):
                     for pos_voisin in voisins_possible(l_arene, position_act): 
                         (lig_voisin, col_voisin) = pos_voisin
                         valeur_voisin = matrice.get_val(calque, lig_voisin, col_voisin)
@@ -92,13 +86,13 @@ def objets_voisinage(l_arene:dict, num_joueur, dist_max:int):
 
 def met_dans_dico(aren, lig, col, lig_d, col_d, dico, distance):
     if lig < lig_d :
-        dico['N'] += (distance, arene.get_val_boite(aren, lig, col), arene.get_proprietaire(aren, lig, col))
+        dico['N'].append((distance, arene.get_val_boite(aren, lig, col), arene.get_proprietaire(aren, lig, col)))
     if lig > lig_d:
-        dico['S'] += (distance, arene.get_val_boite(aren, lig, col), arene.get_proprietaire(aren, lig, col))
+        dico['S'].append((distance, arene.get_val_boite(aren, lig, col), arene.get_proprietaire(aren, lig, col)))
     if col < col_d :    
-        dico['O'] += (distance, arene.get_val_boite(aren, lig, col), arene.get_proprietaire(aren, lig, col))
+        dico['O'].append((distance, arene.get_val_boite(aren, lig, col), arene.get_proprietaire(aren, lig, col)))
     if col > col_d :
-        dico['E'] += (distance, arene.get_val_boite(aren, lig, col), arene.get_proprietaire(aren, lig, col))    
+        dico['E'].append((distance, arene.get_val_boite(aren, lig, col), arene.get_proprietaire(aren, lig, col)))  
 
 
 def get_tete(aren, num_j):
@@ -168,7 +162,7 @@ def recherche_mini(dico_radar):
     mini = None
     card = ""
     for cardi, lst_tuple in dico_radar.items():
-        for dist,val_o, _ in lst_tuple:
+        for dist,_, _ in lst_tuple:
             if mini is None or dist < mini :
                 mini = dist
                 card = cardi
@@ -206,8 +200,8 @@ def recherche_mini(dico_radar):
 
 
 def mon_IA2(num_joueur:int, la_partie:dict)->str:
-    #return recherche_mini(objets_voisinage(la_partie['arene'], num_joueur, 5))[1]
-    return 'N'
+    return recherche_mini(objets_voisinage(la_partie['arene'], num_joueur, 5))[1]
+   
 def mon_IA(num_joueur:int, la_partie:dict)->str:
     """Fonction qui va prendre la decision du prochain coup pour le joueur de numéro ma_couleur
 
@@ -244,4 +238,4 @@ if __name__=="__main__":
             la_partie=partie.partie_from_str(le_jeu)
             actions_joueur=mon_IA2(int(id_joueur),la_partie)
             le_client.envoyer_commande_client(actions_joueur)
-    le_client.afficher_msg("terminé")
+    le_client.afficher_msg("terminé")s
