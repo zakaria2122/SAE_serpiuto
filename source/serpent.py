@@ -24,8 +24,6 @@ def Serpent(nom_joueur:str, num_joueur:int,points:int=0,positions:list=None,tps_
     Returns:
         dict: une dictionnaire contenant les informations du serpent
     """   
-    if direction not in {'N', 'S', 'E', 'O'}:
-        raise ValueError("Invalid direction. Must be one of 'N', 'S', 'E', 'O'.")
     dico_info = {'nom_j': nom_joueur, 'num_j': num_joueur,'points':points, 'positions':positions, 'tps_surpuissance':tps_s, 'tps_protection':tps_p, 'tps_mange_mur':tps_m, 'direction':direction}
     return dico_info
 
@@ -73,7 +71,7 @@ def get_liste_pos(serpent:dict)->list:
     """    
     return serpent['positions']
 
-def get_queue(serpent:dict) -> list:
+def get_queue(serpent:dict) -> [int,int]:
     """retourne la position (lig,col) de la queue du serpent dans l'arène
 
     Args:
@@ -83,7 +81,7 @@ def get_queue(serpent:dict) -> list:
         [int,int]: la position lig,col du la queue du serpent
     """    
 
-    return serpent['positions'][0]
+    return serpent['positions'][-1]
 
 def get_derniere_direction(serpent:dict)->str:
     """retourne la dernière direction choisie par le joueur pour se déplacer
@@ -282,6 +280,7 @@ def serpent_from_str(la_chaine, sep=";")->dict:
     """    
     lst_cle = [('nom_j', str), ('num_j', int), ('points', int), ('tps_surpuissance', int), ('tps_mange_mur', int), ('tps_protection', int)]
     res = Serpent('est', 1, 0, [], 0, 0, 0, 'N')
+
     serpent = la_chaine.split('\n')
     s1, s2 = serpent 
     lst_s1 = s1.split(sep)
@@ -299,6 +298,15 @@ def serpent_from_str(la_chaine, sep=";")->dict:
         lst_position.append([int(lst_s2[posi]), int(lst_s2[posi + 1])])  
     res['positions'] = lst_position      
     return res
+
+
+
+
+
+
+
+
+
 
 
 
