@@ -77,23 +77,60 @@ def objets_voisinage(l_arene:dict, num_joueur, dist_max:int):
                             if valeur_voisin < dist_max:
                                 matrice.set_val(calque, lig, col, valeur_voisin + 1)
                                 modif = True
-                                if arene.est_bonus(l_arene, lig, col):
-                                    met_dans_dico(l_arene, lig, col, lig_t, col_t, dico_final, valeur_voisin + 1)
+                                if (arene.get_val_boite(l_arene, lig, col) != 0  or arene.est_bonus(l_arene, lig, col)) and arene.get_proprietaire(l_arene, lig, col) != num_joueur:
+
+                                    met_dans_dico(l_arene, lig, col, lig_t, col_t, dico_final, valeur_voisin, calque)
                                    
 
-    return dico_final
+    return (dico_final, calque)
 
+def met_dans_dico(aren, lig, col, lig_t, col_t, dico, distance, calque):
 
-def met_dans_dico(aren, lig, col, lig_d, col_d, dico, distance):
-    if lig < lig_d :
+    position_case = (lig, col)
+    lst_chemin = plus_cours_chemin(calque, position_case, aren )
+
+    case1_l, case1_c = lst_chemin[-1]
+
+    if case1_l < lig_t:
         dico['N'].append((distance, arene.get_val_boite(aren, lig, col), arene.get_proprietaire(aren, lig, col)))
-    if lig > lig_d:
+
+
+    if case1_l > lig_t:
         dico['S'].append((distance, arene.get_val_boite(aren, lig, col), arene.get_proprietaire(aren, lig, col)))
-    if col < col_d :    
+
+
+    if case1_c < col_t:    
         dico['O'].append((distance, arene.get_val_boite(aren, lig, col), arene.get_proprietaire(aren, lig, col)))
-    if col > col_d :
+
+
+    if case1_c > col_t:
         dico['E'].append((distance, arene.get_val_boite(aren, lig, col), arene.get_proprietaire(aren, lig, col)))  
 
+
+def plus_cours_chemin(calque, position_arrive, aren):
+    trouve = False
+    lst_final = [position_arrive]
+    pos_act = position_arrive
+
+    while not trouve:
+        ens_voisin = voisins_possible(aren, pos_act)
+        (lig_act, col_act) = pos_act
+        val_act = matrice.get_val(calque, lig_act, col_act)
+
+        if val_act == 0 :
+            trouve = True 
+        
+        else:
+            bon_voisin = False
+            for voisin in ens_voisin:
+                (lig_v, col_v) = voisin
+                val_voisin = matrice.get_val(calque, lig_v, col_v)
+                if val_voisin == val_act - 1 and not bon_voisin:
+                    lst_final.append(voisin)
+                    bon_voisin = True
+                    pos_act = voisin    
+
+    return lst_final 
 
 def get_tete(aren, num_j):
     """renvoie la position de la tete
@@ -152,13 +189,14 @@ def est_sur_le_plateau(aren, pos):
     """
     taille_l, taille_c = pos
     nb_lig_ar, nb_col_ar = arene.get_dim(aren)
-    return taille_l > -1 and taille_l < nb_lig_ar - 1 and taille_c > -1 and taille_c < nb_col_ar - 1
+    return taille_l > -1 and taille_l < nb_lig_ar and taille_c > -1 and taille_c < nb_col_ar
 
 
 
 #==========================================================================================
 
 def recherche_mini(dico_radar):
+
     mini = None
     card = ""
     for cardi, lst_tuple in dico_radar.items():
@@ -166,7 +204,7 @@ def recherche_mini(dico_radar):
             if mini is None or dist < mini :
                 mini = dist
                 card = cardi
-    return mini, card
+    return card
 
 
 
@@ -200,7 +238,7 @@ def recherche_mini(dico_radar):
 
 
 def mon_IA2(num_joueur:int, la_partie:dict)->str:
-    return recherche_mini(objets_voisinage(la_partie['arene'], num_joueur, 5))[1]
+    return recherche_mini(objets_voisinage(la_partie['arene'], num_joueur, 4)[0])
    
 def mon_IA(num_joueur:int, la_partie:dict)->str:
     """Fonction qui va prendre la decision du prochain coup pour le joueur de numéro ma_couleur
@@ -238,4 +276,4 @@ if __name__=="__main__":
             la_partie=partie.partie_from_str(le_jeu)
             actions_joueur=mon_IA2(int(id_joueur),la_partie)
             le_client.envoyer_commande_client(actions_joueur)
-    le_client.afficher_msg("terminé")s
+    le_client.afficher_msg("terminé")
