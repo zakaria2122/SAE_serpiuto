@@ -1,0 +1,4 @@
+arene = {
+    'matrice': {'nb_lig': 7, 'nb_col': 7, 'valeurs': {(0, 0): None, (0, 1): None, (0, 2): None, (0, 3): None, (0, 4): None, (0, 5): None, (0, 6): None, (1, 0): None, (1, 1): None, (1, 2): None, (1, 3): None, (1, 4): None, (1, 5): None, (1, 6): None, (2, 0): None, (2, 1): None, (2, 2): None, (2, 3): None, (2, 4): None, (2, 5): None, (2, 6): None, (3, 0): None, (3, 1): None, (3, 2): None, (3, 3): None, (3, 4): None, (3, 5): None, (3, 6): None, (4, 0): None, (4, 1): None, (4, 2): None, (4, 3): None, (4, 4): None, (4, 5): None, (4, 6): None, (5, 0): None, (5, 1): None, (5, 2): None, (5, 3): None, (5, 4): None, (5, 5): None, (5, 6): None, (6, 0): None, (6, 1): None, (6, 2): None, (6, 3): None, (6, 4): None, (6, 5): None, (6, 6): None}},
+    'nb_joueur': 1,
+    'serpents':[{'nom_j': 'esteban', 'num_j': 1, 'points': 0, 'positions': [[0,0], [0,1]], 'tps_surpuissance': 0, 'tps_protection': 0, 'tps_mange_mur': 0, 'direction': 'N'}]
