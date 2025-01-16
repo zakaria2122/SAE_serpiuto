@@ -82,14 +82,16 @@ def objets_voisinage(l_arene:dict, num_joueur, dist_max:int):
                                     met_dans_dico(l_arene, lig, col, lig_t, col_t, dico_final, valeur_voisin, calque)
                                    
 
-    return (dico_final, calque)
+    return dico_final
 
 def met_dans_dico(aren, lig, col, lig_t, col_t, dico, distance, calque):
 
     position_case = (lig, col)
     lst_chemin = plus_cours_chemin(calque, position_case, aren )
 
-    case1_l, case1_c = lst_chemin[-1]
+    case1_l, case1_c = lst_chemin[-2]
+
+    
 
     if case1_l < lig_t:
         dico['N'].append((distance, arene.get_val_boite(aren, lig, col), arene.get_proprietaire(aren, lig, col)))
@@ -196,14 +198,15 @@ def est_sur_le_plateau(aren, pos):
 #==========================================================================================
 
 def recherche_mini(dico_radar):
-
+    print(dico_radar)
     mini = None
-    card = ""
+    card = "ezhifehezhbifie"
     for cardi, lst_tuple in dico_radar.items():
         for dist,_, _ in lst_tuple:
             if mini is None or dist < mini :
                 mini = dist
                 card = cardi
+    print(card)            
     return card
 
 
@@ -238,8 +241,9 @@ def recherche_mini(dico_radar):
 
 
 def mon_IA2(num_joueur:int, la_partie:dict)->str:
-    return recherche_mini(objets_voisinage(la_partie['arene'], num_joueur, 4)[0])
-   
+    direction_programme = recherche_mini(objets_voisinage(la_partie['arene'], num_joueur, 4))
+    
+
 def mon_IA(num_joueur:int, la_partie:dict)->str:
     """Fonction qui va prendre la decision du prochain coup pour le joueur de numéro ma_couleur
 
