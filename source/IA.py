@@ -77,7 +77,7 @@ def objets_voisinage(l_arene:dict, num_joueur, dist_max:int):
                             if valeur_voisin < dist_max:
                                 matrice.set_val(calque, lig, col, valeur_voisin + 1)
                                 modif = True
-                                if (arene.get_val_boite(l_arene, lig, col) != 0  or arene.est_bonus(l_arene, lig, col)) and arene.get_proprietaire(l_arene, lig, col) != num_joueur:
+                                if arene.get_val_boite(l_arene, lig, col) > 0 and arene.get_val_boite(l_arene, lig, col) <= arene.get_val_boite(l_arene, lig_t, col_t) and arene.get_proprietaire(l_arene, lig, col) != num_joueur:
 
                                     met_dans_dico(l_arene, lig, col, lig_t, col_t, dico_final, valeur_voisin, calque)
                                    
@@ -198,29 +198,33 @@ def est_sur_le_plateau(aren, pos):
 #==========================================================================================
 
 def recherche_mini(dico_radar):
-    print(dico_radar)
     mini = None
-    card = "ezhifehezhbifie"
+    card = ""
     for cardi, lst_tuple in dico_radar.items():
         for dist,_, _ in lst_tuple:
             if mini is None or dist < mini :
                 mini = dist
-                card = cardi
-    print(card)            
+                card = cardi           
     return card
 
 def auto_mange(aren, num_joueur, lig_t, col_t):
- position_serpent = arene.get_serpent(aren, num_joueur)
- pos_cou_l, pos_cou_c = position_serpent[1]
+    position_serpent = arene.get_serpent(aren, num_joueur)
 
- if pos_cou_l < lig_t :
-    return 'N'
- elif pos_cou_l > lig_t:
-    return 'S'
- elif pos_cou_c > col_t :
-    return 'E'
- else :
-    return 'O'
+    if len(position_serpent) >= 1:
+        pos_cou_l, pos_cou_c = position_serpent[1]
+
+        if pos_cou_l < lig_t :
+            return 'N'
+        elif pos_cou_l > lig_t:
+            return 'S'
+        elif pos_cou_c > col_t :
+            return 'E'
+        else :
+            return 'O'
+
+    else:
+        return 'N'
+
 
 
 
@@ -266,7 +270,7 @@ def mon_IA2(num_joueur: int, la_partie: dict) -> str:
     if not dir_pos:
         return auto_mange(l_arene, num_joueur, tete_l, tete_c)
     direction = random.choice(dir_pos)
-    voisins = objets_voisinage(l_arene, num_joueur, 4)
+    voisins = objets_voisinage(l_arene, num_joueur, 10)
     direction_optimale = recherche_mini(voisins)
     return direction_optimale if direction_optimale in dir_pos else direction
     
