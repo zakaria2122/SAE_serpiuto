@@ -209,6 +209,18 @@ def recherche_mini(dico_radar):
     print(card)            
     return card
 
+def auto_mange(aren, num_joueur, lig_t, col_t):
+ position_serpent = arene.get_serpent(aren, num_joueur)
+ pos_cou_l, pos_cou_c = position_serpent[1]
+
+ if pos_cou_l < lig_t :
+    return 'N'
+ elif pos_cou_l > lig_t:
+    return 'S'
+ elif pos_cou_c > col_t :
+    return 'E'
+ else :
+    return 'O'
 
 
 
@@ -237,11 +249,26 @@ def recherche_mini(dico_radar):
 
 
 
+def mon_IA2(num_joueur: int, la_partie: dict) -> str:
+    """
+    Implémente une IA basique pour choisir une direction valide pour un joueur.
 
+    Args:
+    num_joueur (int): Numéro du joueur.
+    la_partie (dict): Dictionnaire contenant les informations de la partie.
 
-
-def mon_IA2(num_joueur:int, la_partie:dict)->str:
-    direction_programme = recherche_mini(objets_voisinage(la_partie['arene'], num_joueur, 4))
+    Returns:
+    str: Une direction parmi celles possibles ('N', 'S', 'E', 'O'), ou 'X' si aucune n'est possible.
+    """
+    l_arene = la_partie.get('arene')
+    tete_l, tete_c = get_tete(l_arene, num_joueur)
+    dir_pos = directions_possibles(l_arene, num_joueur)
+    if not dir_pos:
+        return auto_mange(l_arene, num_joueur, tete_l, tete_c)
+    direction = random.choice(dir_pos)
+    voisins = objets_voisinage(l_arene, num_joueur, 4)
+    direction_optimale = recherche_mini(voisins)
+    return direction_optimale if direction_optimale in dir_pos else direction
     
 
 def mon_IA(num_joueur:int, la_partie:dict)->str:
