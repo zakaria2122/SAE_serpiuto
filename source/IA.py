@@ -39,6 +39,7 @@ def directions_possibles(l_arene:dict,num_joueur:int)->str:
             pouvant être prise par le joueur. Attention il est possible
             qu'aucune direction ne soit possible donc la fonction peut retourner la chaine vide
     """    
+    #complexité 0(N)
     return arene.directions_possibles(l_arene, num_joueur)
 
 def objets_voisinage(l_arene:dict, num_joueur, dist_max:int):
@@ -55,7 +56,7 @@ def objets_voisinage(l_arene:dict, num_joueur, dist_max:int):
             (distance,val_objet,prop) où distance indique le nombre de cases jusqu'à l'objet et id_objet
             val_obj indique la valeur de l'objet ou de la boite et prop indique le propriétaire de la boite
     """
-
+    #complexité 0(N³)
     dico_final = {'N': [], 'S': [], 'E': [], 'O': []}
 
     lig_t, col_t = get_tete(l_arene, num_joueur)
@@ -81,14 +82,9 @@ def objets_voisinage(l_arene:dict, num_joueur, dist_max:int):
                                 matrice.set_val(calque, lig, col, valeur_voisin + 1)
                                 modif = True
 
-                                #if arene.get_val_boite(l_arene, lig_t, col_t) >= 2:
                                 if arene.get_val_boite(l_arene, lig, col) in BONUS_INTERESSANT or arene.get_val_boite(l_arene, lig, col) >= 1 and arene.get_val_boite(l_arene, lig, col) <= arene.get_val_boite(l_arene, lig_t, col_t) and arene.get_proprietaire(l_arene, lig, col) != num_joueur:
 
                                     met_dans_dico(l_arene, lig, col, lig_t, col_t, dico_final, valeur_voisin, calque)
-                                #else:
-                                    #if arene.get_val_boite(l_arene, lig, col) in BONUS_INTERESSANT or arene.get_val_boite(l_arene, lig, col) >= 1 and arene.get_val_boite(l_arene, lig, col) <= arene.get_val_boite(l_arene, lig_t, col_t) and arene.get_proprietaire(l_arene, lig, col) != num_joueur:
-
-                                     #   met_dans_dico(l_arene, lig, col, lig_t, col_t, dico_final, valeur_voisin, calque)   
 
     return dico_final
 
@@ -105,6 +101,7 @@ def met_dans_dico(aren, lig, col, lig_t, col_t, dico, distance, calque):
         distance (int): distance de l'objet 
         calque (dict): 
     """
+    #complexité 0(1)
     position_case = (lig, col)
     lst_chemin = plus_cours_chemin(calque, position_case, aren )
 
@@ -139,6 +136,7 @@ def plus_cours_chemin(calque, position_arrive, aren):
     Returns:
         list: liste des posion du plus court chemin 
     """
+    #complexité 0()
     trouve = False
     lst_final = [position_arrive]
     pos_act = position_arrive
@@ -172,6 +170,7 @@ def get_tete(aren, num_j):
     Returns:
         list: position
     """
+    #complexité 0(1)
     return arene.get_serpent(aren, num_j)[0]
 
 def voisins_possible(le_plateau, position):
@@ -184,6 +183,7 @@ def voisins_possible(le_plateau, position):
     Returns:
         set: l'ensemble des positions des cases voisines accessibles
     """
+    #complexité 0(1)
     (lig_act, col_act) = position 
 
     pos_n_l, pos_n_c = lig_act - 1, col_act
@@ -218,6 +218,7 @@ def est_sur_le_plateau(aren, pos):
     Returns:
         [bool]: True si la position est bien sur le plateau
     """
+    #complexité 0(1)
     taille_l, taille_c = pos
     nb_lig_ar, nb_col_ar = arene.get_dim(aren)
     return taille_l > -1 and taille_l < nb_lig_ar and taille_c > -1 and taille_c < nb_col_ar
@@ -235,6 +236,7 @@ def recherche_mini(dico_radar):
     Returns:
         str: cardinalité idéal 
     """
+    #complexité 0(N²)
     mini = None
     card = ""
     for cardi, lst_tuple in dico_radar.items():
@@ -256,6 +258,7 @@ def auto_mange(aren, num_joueur, lig_t, col_t):
     Returns:
         str: cardinalité pour faire demi-tour
     """
+    #complexité 0(1)
     position_serpent = arene.get_serpent(aren, num_joueur)
 
     if len(position_serpent) >= 2:
@@ -282,25 +285,6 @@ def auto_mange(aren, num_joueur, lig_t, col_t):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def mon_IA2(num_joueur: int, la_partie: dict) -> str:
     """
     Implémente une IA basique pour choisir une direction valide pour un joueur.
@@ -312,16 +296,17 @@ def mon_IA2(num_joueur: int, la_partie: dict) -> str:
     Returns:
     str: Une direction parmi celles possibles ('N', 'S', 'E', 'O'), ou 'X' si aucune n'est possible.
     """
-    l_arene = la_partie.get('arene')
-    tete_l, tete_c = get_tete(l_arene, num_joueur)
-    dir_pos = directions_possibles(l_arene, num_joueur)
-    if not dir_pos:
-        return auto_mange(l_arene, num_joueur, tete_l, tete_c)
+    #complexité 0(N³)
+    l_arene = la_partie.get('arene') #complexité 0(1)
+    tete_l, tete_c = get_tete(l_arene, num_joueur) #complexité 0(1)
+    dir_pos = directions_possibles(l_arene, num_joueur) #complexité 0(N)
+    if not dir_pos: #complexité 0(1)
+        return auto_mange(l_arene, num_joueur, tete_l, tete_c) #complexité 0(1)
         
-    direction = random.choice(dir_pos)
-    voisins = objets_voisinage(l_arene, num_joueur, 10)
-    direction_optimale = recherche_mini(voisins)
-    return direction_optimale if direction_optimale in dir_pos else direction
+    direction = random.choice(dir_pos) #complexité 0(1)
+    voisins = objets_voisinage(l_arene, num_joueur, 10) #complexité 0(N³)
+    direction_optimale = recherche_mini(voisins) #complexité 0(N²)
+    return direction_optimale if direction_optimale in dir_pos else direction #complexité 0(N)
     
 
 def mon_IA(num_joueur:int, la_partie:dict)->str:
