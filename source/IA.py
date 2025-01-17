@@ -22,6 +22,9 @@ direction_prec='X' # variable indiquant la décision précédente prise par le j
 ### Toutes vos fonctions devront être documentées
 ####################################################################
 
+BONUS_INTERESSANT = {-1, -5, -2}
+
+
 def directions_possibles(l_arene:dict,num_joueur:int)->str:
     """Indique les directions possible pour le joueur num_joueur
         c'est à dire les directions qu'il peut prendre sans se cogner dans
@@ -77,15 +80,31 @@ def objets_voisinage(l_arene:dict, num_joueur, dist_max:int):
                             if valeur_voisin < dist_max:
                                 matrice.set_val(calque, lig, col, valeur_voisin + 1)
                                 modif = True
-                                if arene.get_val_boite(l_arene, lig, col) > 0 and arene.get_val_boite(l_arene, lig, col) <= arene.get_val_boite(l_arene, lig_t, col_t) and arene.get_proprietaire(l_arene, lig, col) != num_joueur:
+
+                                #if arene.get_val_boite(l_arene, lig_t, col_t) >= 2:
+                                if arene.get_val_boite(l_arene, lig, col) in BONUS_INTERESSANT or arene.get_val_boite(l_arene, lig, col) >= 1 and arene.get_val_boite(l_arene, lig, col) <= arene.get_val_boite(l_arene, lig_t, col_t) and arene.get_proprietaire(l_arene, lig, col) != num_joueur:
 
                                     met_dans_dico(l_arene, lig, col, lig_t, col_t, dico_final, valeur_voisin, calque)
-                                   
+                                #else:
+                                    #if arene.get_val_boite(l_arene, lig, col) in BONUS_INTERESSANT or arene.get_val_boite(l_arene, lig, col) >= 1 and arene.get_val_boite(l_arene, lig, col) <= arene.get_val_boite(l_arene, lig_t, col_t) and arene.get_proprietaire(l_arene, lig, col) != num_joueur:
+
+                                     #   met_dans_dico(l_arene, lig, col, lig_t, col_t, dico_final, valeur_voisin, calque)   
 
     return dico_final
 
 def met_dans_dico(aren, lig, col, lig_t, col_t, dico, distance, calque):
+    """met dans le dictionnaire la distance avec un objet interressant à la bonne cardinalité
 
+    Args:
+        aren (dict): 
+        lig (int): 
+        col (int): 
+        lig_t (int): 
+        col_t (int): 
+        dico (dict): dico final
+        distance (int): distance de l'objet 
+        calque (dict): 
+    """
     position_case = (lig, col)
     lst_chemin = plus_cours_chemin(calque, position_case, aren )
 
@@ -110,6 +129,16 @@ def met_dans_dico(aren, lig, col, lig_t, col_t, dico, distance, calque):
 
 
 def plus_cours_chemin(calque, position_arrive, aren):
+    """detrermine le plus court chemin entre deux position 
+
+    Args:
+        calque (dict): le claque creer par la fonction objet_voisinage
+        position_arrive (tuple): position d'arrivé (ligne, colonne)
+        aren (dict): l'arene en question 
+
+    Returns:
+        list: liste des posion du plus court chemin 
+    """
     trouve = False
     lst_final = [position_arrive]
     pos_act = position_arrive
@@ -183,7 +212,7 @@ def est_sur_le_plateau(aren, pos):
     """Indique si la position est bien sur le plateau
 
     Args:
-        le_plateau (aren): l'arene
+        aren (dict): l'arene en question
         position (tuple): un tuple de deux entiers de la forme (no_ligne, no_colonne) 
 
     Returns:
@@ -198,6 +227,14 @@ def est_sur_le_plateau(aren, pos):
 #==========================================================================================
 
 def recherche_mini(dico_radar):
+    """recherche de minimum dans un dictionnaire 
+
+    Args:
+        dico_radar (dict): dictionnaire identique à celui renvoyé par la fonction objet voisinage
+
+    Returns:
+        str: cardinalité idéal 
+    """
     mini = None
     card = ""
     for cardi, lst_tuple in dico_radar.items():
@@ -208,9 +245,20 @@ def recherche_mini(dico_radar):
     return card
 
 def auto_mange(aren, num_joueur, lig_t, col_t):
+    """ si le serpent se bloque dans un mur, il s'auto mange pour faire demi-tour 
+
+    Args:
+        aren (dict): l'arene
+        num_joueur (int): le numero du joueur
+        lig_t (int): numero de lige de la tete du serpent
+        col_t (int): numero colonne de la tete du serpent 
+
+    Returns:
+        str: cardinalité pour faire demi-tour
+    """
     position_serpent = arene.get_serpent(aren, num_joueur)
 
-    if len(position_serpent) >= 1:
+    if len(position_serpent) >= 2:
         pos_cou_l, pos_cou_c = position_serpent[1]
 
         if pos_cou_l < lig_t :
@@ -269,6 +317,7 @@ def mon_IA2(num_joueur: int, la_partie: dict) -> str:
     dir_pos = directions_possibles(l_arene, num_joueur)
     if not dir_pos:
         return auto_mange(l_arene, num_joueur, tete_l, tete_c)
+        
     direction = random.choice(dir_pos)
     voisins = objets_voisinage(l_arene, num_joueur, 10)
     direction_optimale = recherche_mini(voisins)
