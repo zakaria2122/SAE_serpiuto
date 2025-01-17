@@ -136,7 +136,7 @@ def plus_cours_chemin(calque, position_arrive, aren):
     Returns:
         list: liste des posion du plus court chemin 
     """
-    #complexité 0()
+    #complexité 0(N)
     trouve = False
     lst_final = [position_arrive]
     pos_act = position_arrive
